@@ -8,15 +8,13 @@
       #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #input { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
       #inputname { background: rgba(49, 88, 1, 0.15); padding: 0.25rem; position: absolute; bottom: 50px; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #button { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { background: rgba(67, 184, 239, 0.15); border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #button1 { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { background: rgba(20, 146, 204, 0.964); border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
       #input:focus { outline: none; }
       #inputname {background: rgba(10, 10, 1, 0.15); border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
       #inputname:focus { outline: none; }
       li { padding: 0.5rem 1rem; }
       li:nth-child(odd) { background: #8be244; }
-      /* #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; } */
-      /* #button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; } */
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(2n) { background: #8be244; }
@@ -30,65 +28,44 @@
   <body>
     <ul id="messages1" class="class1">
     </ul>
-    <!-- <form id="form" action=""> -->
-      <input id="inputname" autocomplete="off" oninput="typing()"/></input>
-      <input id="input" autocomplete="off" oninput="typing()"/></input>
-      <button id="button" onclick="chat()">Send</button>
-    <!-- </form> -->
+      <!-- <input id="inputname" autocomplete="off" oninput="typing()"/></input> -->
+      <input id="input" autocomplete="off" />
+      <button id="button1" onclick="chat()">Send</button>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-         $("#input").keypress(function(event) {
+      var name;
+        $("#input").keypress(function(event) {
             if (event.keyCode === 13) {
-                $("#button").click();
+                $("#button1").click();
             }
         });
 
-        var socket = io();  // Now the socket.io-client is loaded i.e client-server connection is made whenever client types the url localhost:3000/ the browser will load index.html present on the server machine.
-        
-        // socket.emit('conn', "a user connected");
-        // socket.emit('register username', $("#inputname").val());
-        
+        var socket = io();
+        // a user connected functionality
+        socket.emit('conn', 'a user connected')
+
         socket.on('conn', (msg1) => {
             $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
         });
 
-        // const randomStr = (n=10) => [...Array(n)]
-        // .map(e => String.fromCharCode(~~(Math.random() * 26) + 97))
-        // .join("");
-
-      //   var typing = () => {
-      //     var x1 = $("#inputname").val();
-      //     var x2 = $("#input").val();
-      //     if( x1 || x2)
-      //     {
-      //       socket.emit('userTyping', 'User is typing...');
-      //     }
-      //     else{
-      //       socket.emit('userTyping','Online');
-      //     }
-      //     socket.on('userTyping', function(msg) {
-      //       $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg, '</li>');
-      //   });
-      // }
-
+        // retrieving name from cookie that was set in name.html & sending chat name and message to server functionality
         function chat(){
-          if( $("#inputname").val() && $("#input").val())
+          // console.log(document.cookie);
+          if( $("#input").val() )
           {
-            socket.emit('chat message', {username: $("#inputname").val(), usermessage: $("#input").val()} );
-            $("#inputname").val('');
+            socket.emit('chat message', {username: name, usermessage: $("#input").val()} );
             $("#input").val('');
-          }
-          else if( $("#input").val() )
-          {
-            socket.emit('chat message', { usermessage: $("#input").val() } );
-            $("#input").val('');
+            
           }
         };
 
-          socket.on('chat message', function(msg) {
-            $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg, '</li>');
-        });
-
+          // displaying chat message functionality
+            socket.on('chat message', function(msg) {
+              if(msg.username && msg.usermessage)
+              {
+                $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ': ', msg.usermessage, '</li>');
+              }
+            });
     </script>
   </body>
 </html>

@@ -4,8 +4,6 @@
     <title>Socket.IO Name</title>
     <style>
             body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-            /* #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); } */
             #label { position: fixed; bottom: 400px; left: 560px; right: 560px;}
             #inputname { background: rgba(142, 255, 4, 0.878); border: none; padding: 0.25rem; position: fixed; bottom: 340px; left: 560px; right: 560px; border-radius: 2rem; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
             #button { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 340px; right: 530px; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
@@ -15,22 +13,27 @@
   </head>
   <body>
       <label for="inputname"><b>Enter Your Name</b></label>
-      <input id="inputname" autocomplete="off" oninput="typing()" name="name"/>
-      <button id="button" onclick=sendName()>Save</button>
+      <input id="inputname" autocomplete="off"/>
+      <button id="button" onclick="goToChat()">Go</button>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      var inputname;
          $("#inputname").keypress(function(event) {
             if (event.keyCode === 13) {
                 $("#button").click();
             }
         });
 
-        // var name;
-
-        function sendName(){
-          document.cookie = "name="+ $("#inputname").val();
-          console.log(document.cookie);
-          // window.location.href='/chat'
+        function goToChat(){
+          inputnamevalue=$("#inputname").val();
+          $("#inputname").val('');
+          let name = "name";
+          let value = inputnamevalue;
+          document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
+          // console.log(inputname);
+          // document.cookie = "name=" + inputname + "";
+          // console.log(document.cookie);
+          window.location.href='/chat'
         }
 
         var socket = io();
