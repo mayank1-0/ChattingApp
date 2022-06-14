@@ -41,8 +41,18 @@
         });
 
         var socket = io();
-        // a user connected functionality
-        socket.emit('conn', 'a user connected')
+
+        const params = new URLSearchParams(
+          window.location.search
+        );
+        name = params.get("name");
+        console.log(name);
+
+        // {name} connected functionality
+        socket.emit('conn', name + ' connected')
+
+        // {name} disconnected functionality
+        // socket.emit('disconnect', name);
 
         socket.on('conn', (msg1) => {
             $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
@@ -50,11 +60,6 @@
 
         // retrieving name from name.html sending chat name and message to server functionality
         function chat(){
-          const params = new URLSearchParams(
-            window.location.search
-          );
-          name = params.get("name");
-          console.log(name);
           if( $("#input").val() )
           {
             socket.emit('chat message', {username: name, usermessage: $("#input").val()} );
