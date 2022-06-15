@@ -32,8 +32,10 @@ io.on('connection', (socket) => {
   // chat message functionality
   socket.on('chat message', (data) => {
     io.emit('chat message', data);
-    console.log('mesage: ', data);
+    console.log('message: ', data);
   });
+
+  // user is typing functionality
 
   // some user disconnected functionality
   socket.on('disconnect', function () {
