@@ -75,6 +75,14 @@
                 $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ': ', msg.usermessage, '</li>');
               }
             });
+
+          // displaying chat message when someone disconnects functionality
+          socket.on('chat message1', function(msg) {
+              if(msg.username && msg.usermessage)
+              {
+                $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ' ', msg.usermessage, '</li>');
+              }
+            });
     </script>
   </body>
 </html>
