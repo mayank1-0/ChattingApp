@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
   // some user disconnected functionality
   socket.on('disconnect', function () {
     if( online = 0 ){
-      io.emit('chat message', {username: disconnectName, usermessage: 'disconnected'});
-    }  });
+      io.emit('chat message1', {username: disconnectName, usermessage: 'disconnected'});
+    }
+  });
 });

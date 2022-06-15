@@ -1,176 +1,88 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-<head>
-  <title>Socket.IO chat</title>
-  <style>
-    body {
-      margin: 0;
-      padding-bottom: 3rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #inputname { background: rgba(49, 88, 1, 0.15); padding: 0.25rem; position: absolute; bottom: 50px; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #button1 { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { background: rgba(20, 146, 204, 0.964); border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #inputname {background: rgba(10, 10, 1, 0.15); border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #inputname:focus { outline: none; }
+      li { padding: 0.5rem 1rem; }
+      li:nth-child(odd) { background: #8be244; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(2n) { background: #8be244; }
+      #messages1 { list-style-type: none; margin: 0; padding: 0; }
+      #messages1 > li { padding: 0.5rem 1rem; }
+      #messages1 > li:nth-child(2n) { background: #8be244; }
+      
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <ul id="messages1" class="class1">
+    </ul>
+      <!-- <input id="inputname" autocomplete="off" oninput="typing()"/></input> -->
+      <input id="input" autocomplete="off" oninput="typing()"/></input>
+      <button id="button1" onclick="chat()">Send</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var name;
+         $("#input").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $("#button1").click();
+            }
+        });
 
-    #form {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.25rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
+        var socket = io();
 
-    #input {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.25rem;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
+        const params = new URLSearchParams(
+          window.location.search
+        );
+        name = params.get("name");
+        console.log(name);
 
-    #inputname {
-      background: rgba(49, 88, 1, 0.15);
-      padding: 0.25rem;
-      position: absolute;
-      bottom: 50px;
-      left: 0;
-      right: 0;
-      display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
+        // {name} connected functionality
+        socket.emit('conn', name + ' connected')
 
-    #button1 {
-      background: rgba(0, 0, 0, 0.15);
-      padding: 0.25rem;
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      display: flex;
-      height: 3rem;
-      box-sizing: border-box;
-      backdrop-filter: blur(10px);
-    }
+        // {name} disconnected functionality
+        // socket.emit('disconnect', name);
 
-    #input {
-      background: rgba(20, 146, 204, 0.964);
-      border: none;
-      padding: 0 1rem;
-      flex-grow: 1;
-      border-radius: 2rem;
-      margin: 0.25rem;
-    }
+        socket.on('conn', (msg1) => {
+            $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
+        });
 
-    #input:focus {
-      outline: none;
-    }
+        // retrieving name from name.html sending chat name and message to server functionality
+        function chat(){
+          if( $("#input").val() )
+          {
+            socket.emit('chat message', {username: name, usermessage: $("#input").val()} );
+            $("#input").val('');
+            
+          }
+        };
 
-    #inputname {
-      background: rgba(10, 10, 1, 0.15);
-      border: none;
-      padding: 0 1rem;
-      flex-grow: 1;
-      border-radius: 2rem;
-      margin: 0.25rem;
-    }
+          // displaying chat message functionality
+            socket.on('chat message', function(msg) {
+              if(msg.username && msg.usermessage)
+              {
+                $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ': ', msg.usermessage, '</li>');
+              }
+            });
 
-    #inputname:focus {
-      outline: none;
-    }
-
-    li {
-      padding: 0.5rem 1rem;
-    }
-
-    li:nth-child(odd) {
-      background: #8be244;
-    }
-
-    #messages {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    #messages>li {
-      padding: 0.5rem 1rem;
-    }
-
-    #messages>li:nth-child(2n) {
-      background: #8be244;
-    }
-
-    #messages1 {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    #messages1>li {
-      padding: 0.5rem 1rem;
-    }
-
-    #messages1>li:nth-child(2n) {
-      background: #8be244;
-    }
-  </style>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
-
-<body>
-  <ul id="messages1" class="class1">
-  </ul>
-  <!-- <input id="inputname" autocomplete="off" oninput="typing()"/></input> -->
-  <input id="input" autocomplete="off" oninput="typing()" /></input>
-  <button id="button1" onclick="chat()">Send</button>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var name;
-    $("#input").keypress(function (event) {
-      if (event.keyCode === 13) {
-        $("#button1").click();
-      }
-    });
-
-    const params = new URLSearchParams(
-      window.location.search
-    );
-    name = params.get("name");
-    console.log(name);
-
-    var socket = io();
-    // {name} user connected functionality
-    socket.emit('conn', name + ' connected')
-
-    socket.on('conn', (msg1) => {
-      $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
-    });
-
-    // retrieving name from name.html sending chat name and message to server functionality
-    function chat() {
-      if ($("#input").val()) {
-        socket.emit('chat message', { username: name, usermessage: $("#input").val() });
-        $("#input").val('');
-
-      }
-    };
-
-    // displaying chat message functionality
-    socket.on('chat message', function (msg) {
-      if (msg.username && msg.usermessage) {
-        $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ': ', msg.usermessage, '</li>');
-      }
-    });
-  </script>
-</body>
-
+          // displaying chat message when someone disconnects functionality
+          socket.on('chat message1', function(msg) {
+              if(msg.username && msg.usermessage)
+              {
+                $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ' ', msg.usermessage, '</li>');
+              }
+            });
+    </script>
+  </body>
 </html>
