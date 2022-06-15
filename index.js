@@ -13,11 +13,6 @@ app.get('/chat', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/fetch-name', (req, res) => {
-  const name = req.params.
-  res.send({ status: 200, data: userData, message: 'User created successfully' });  //Sending response.
-});
-
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
