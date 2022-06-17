@@ -21,7 +21,12 @@
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
+        $("#inputname").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $("#button").click();
+            }
+        }); 
+        var socket = io();
     </script>
   </body>
 </html>
