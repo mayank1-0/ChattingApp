@@ -27,12 +27,9 @@
         function goToChat(){
           inputnamevalue=$("#inputname").val();
           $("#inputname").val('');
-          let name = "name";
           let value = inputnamevalue;
-          document.cookie = encodeURIComponent(name) + '=' + encodeURIComponent(value);
-          // console.log(inputname);
-          // document.cookie = "name=" + inputname + "";
-          // console.log(document.cookie);
+          document.cookie=value;
+          console.log(document.cookie);
           window.location.href='/chat'
         }
 

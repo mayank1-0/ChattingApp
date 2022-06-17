@@ -33,6 +33,7 @@
       <button id="button1" onclick="chat()">Send</button>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      console.log('11111111222222' , document.cookie );
       var name;
         $("#input").keypress(function(event) {
             if (event.keyCode === 13) {
@@ -41,8 +42,8 @@
         });
 
         var socket = io();
-        // a user connected functionality
-        socket.emit('conn', 'a user connected')
+        // {name} connected functionality
+        socket.emit('conn', document.cookie + ' connected')
 
         socket.on('conn', (msg1) => {
             $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
@@ -53,7 +54,7 @@
           // console.log(document.cookie);
           if( $("#input").val() )
           {
-            socket.emit('chat message', {username: name, usermessage: $("#input").val()} );
+            socket.emit('chat message', {username: document.cookie, usermessage: $("#input").val()} );
             $("#input").val('');
             
           }
