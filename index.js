@@ -37,6 +37,6 @@ io.on('connection', (socket) => {
 
   // some user disconnected functionality
   socket.on('disconnect', function () {
-  
+
   });
 });
