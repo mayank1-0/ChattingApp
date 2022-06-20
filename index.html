@@ -130,7 +130,7 @@
   <ul id="messages1" class="class1">
   </ul>
   <!-- <input id="inputname" autocomplete="off" oninput="typing()"/></input> -->
-  <input id="input" autocomplete="off" oninput="onKeyDownNotEnter()" /></input>
+  <input id="input" autocomplete="off"/>
   <button id="button1" onclick="chat()">Send</button>
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -139,12 +139,20 @@
     var timeout = undefined;
 
     $("#input").keypress(function (event) {
-      if (event.keyCode === 13) {
+      if (event.keyCode == 13) {
         $("#button1").click();
       }
     });
 
     var socket = io();
+
+    $("#input").keyup(function (e) {
+        if (e.keyCode == 13) {
+        }
+        else {
+          socket.emit('is typing', { nickname: $('#nickname').val() });
+        }
+      });
 
     const params = new URLSearchParams(
       window.location.search
@@ -179,29 +187,20 @@
     });
 
     // user is typing functionality
-    function timeoutFunction() {
-      typing = false;
-      socket.emit('chat message', {username: '', usermessage: 'user stopped typing'});
-    }
-
     function onKeyDownNotEnter() {
-      if (typing == false) {
-        typing = true
-        socket.emit('chat message', {username: '', usermessage: 'user started typing'});
-        timeout = setTimeout(timeoutFunction, 2000);
-      } else {
-        clearTimeout(timeout);
-        timeout = setTimeout(timeoutFunction, 2000);
-      }
+      // $("#input").keyup(function (e) {
+      //   if (e.keyCode == 13) {
+      //     socket.emit('send', { nickname: $('#nickname').val(), msg: $("#textbox").val() });
+      //     $('#textbox').val('');
+      //   }
+      //   else {
+      //     socket.emit('is typing', { nickname: $('#nickname').val() });
+      //   }
+      // });
+
 
     }
 
-    // displaying chat message when someone disconnects functionality
-    // socket.on('chat message1', function (msg) {
-    //   if (msg.username && msg.usermessage) {
-    //     $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg.username, ' ', msg.usermessage, '</li>');
-    //   }
-    // });
   </script>
 </body>
 
