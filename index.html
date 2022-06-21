@@ -135,8 +135,6 @@
   <script src="/socket.io/socket.io.js"></script>
   <script>
     var name;
-    var typing = false;
-    var timeout = undefined;
 
     $("#input").keypress(function (event) {
       if (event.keyCode == 13) {
@@ -145,14 +143,6 @@
     });
 
     var socket = io();
-
-    $("#input").keyup(function (e) {
-        if (e.keyCode == 13) {
-        }
-        else {
-          socket.emit('is typing', { nickname: $('#nickname').val() });
-        }
-      });
 
     const params = new URLSearchParams(
       window.location.search
@@ -187,19 +177,22 @@
     });
 
     // user is typing functionality
-    function onKeyDownNotEnter() {
-      // $("#input").keyup(function (e) {
-      //   if (e.keyCode == 13) {
-      //     socket.emit('send', { nickname: $('#nickname').val(), msg: $("#textbox").val() });
-      //     $('#textbox').val('');
-      //   }
-      //   else {
-      //     socket.emit('is typing', { nickname: $('#nickname').val() });
-      //   }
-      // });
+    var keycode = 0;
+    var keyup = 0;
+    $("#input").keyup(function (e) {
+        if (e.keyCode == 13) {
+        }
+        else if(e.keyCode != 13 && keyup == 0){
+          keycode = 1;
+          keyup = 1;
+          socket.emit('is typing', { name: name });
+        }
+        setTimeout(function(){keyup = 0}, 5000);
+      });
 
-
-    }
+      socket.on('is typing', function(msg){
+        console.log('[]][][][][][]', msg);
+      });
 
   </script>
 </body>

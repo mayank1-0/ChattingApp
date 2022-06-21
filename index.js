@@ -36,6 +36,9 @@ io.on('connection', (socket) => {
   });
 
   // user is typing functionality
+  socket.on('is typing', (data) => {
+    io.emit('is typing', data.name + ' is typing...');
+  });
 
   // some user disconnected functionality
   socket.on('disconnect', function () {
