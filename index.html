@@ -13,7 +13,7 @@
     }
 
     #div0 {
-      margin-left: 800px;    
+      margin-left: 800px;  
     }
 
     #div1 {
@@ -145,12 +145,20 @@
 </head>
 
 <body>
+  <a href='/'><img style="margin-left: 20px;" src="/img" width="700" height="200" alt="Leave chat room"></a>
   <div id="div0" class="w3-container">
     <h2 style="text-align: center">Users</h2>
     <div id="div1" class="w3-panel w3-card">
-      <label id="label1"></label>
+      <!-- <ul id="ul1"></ul> -->
+      <!-- <label id="label1"></label>
       <br>
       <label id="label2">(online)</label>
+      <label id="label3"></label>
+      <br>
+      <label id="label4"></label>
+      <label id="label5"></label>
+      <br>
+      <label id="label6"></label> -->
     </div>
   </div>
   <ul id="messages1" class="class1">
@@ -177,10 +185,7 @@
     console.log(name);
 
     // {name} connected functionality
-    socket.emit('conn', name + ' connected')
-
-    // {name} disconnected functionality
-    // socket.emit('disconnect', name);
+    socket.emit('conn', name + ' connected');
 
     socket.on('conn', (msg1) => {
       $("#messages1").append('<li style="padding: 0.5rem 1rem;">', msg1, '</li>');
@@ -220,8 +225,22 @@
         console.log('[]][][][][][]', msg);
       });
 
-    // label - online/left/is typing...
-    $("#label1").text(name);
+    // label - A, B, C ..
+    socket.emit('label', name);
+
+    socket.on('label', ([name, status]) => {
+      $("#div1").append("<label id='label1'>" + name + "</label><br><label id='label2'>" + status + "</label><br>");
+    });
+
+    // status - online/left/is typing...
+    
+    // $("#div1").append("<label id='label1'>" + name + "</label><br><label id='label2'>(online)</label>");
+    // $("#ul1").append("<li>" + label1 + "</li>");
+    // $("#label2").text();
+    // $("#label3").text();
+    // $("#label4").text();
+    // $("#label5").text();
+    // $("#label6").text();
 
   </script>
 </body>
