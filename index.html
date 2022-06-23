@@ -223,6 +223,12 @@
 
       socket.on('is typing', function(msg){
         console.log('[]][][][][][]', msg);
+        if(keyup = 1){
+        $('#label2').text('is typing');
+        }
+        if(keyup = 0){
+          $('#label2').text('online');
+        }
       });
 
     // label - A, B, C ..

@@ -5,7 +5,7 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 var disconnectName;
-var online;
+var online = false;
 var status = 'whatever';
 
 app.get('/', (req, res) => {
@@ -56,22 +56,20 @@ io.on('connection', (socket) => {
 
   // label - online/left/is typing...
   socket.on('label', (name) => {
-    if (socket.rooms.has("chatroom-1") && online != 0) {
-      status = 'online';
-    }
-    else if (socket.rooms.has("chatroom-1") && online == 0) {
-      status = 'left';
+    if (socket.rooms.has("chatroom-1") == true) {
+     status = 'online';
     }
     else {
-     console.log('whatever'); 
+     status = 'whatever'; 
     }
     io.emit('label', [name, status]);
   });
 
   // some user disconnected functionality + user leaves the room and emits status
   socket.on('disconnect', function () {
+  console.log('98746541652132');
   socket.leave("room-1");
-  online = 0;
+  online = false;
   // io.emit('label', [name, status]);
   io.emit('chat message', { username: disconnectName, usermessage: 'disconnected' });
   });
